@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { Lock, PackageCheck, RefreshCcw, TrendingUp, Users } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { formatTk } from "@/lib/utils";
+import AdminProductManager from "@/components/AdminProductManager";
 
 type AdminOrder = {
   id: string;
@@ -108,6 +109,8 @@ export default function AdminPage() {
             <div className="card p-6"><TrendingUp className="mb-4 h-8 w-8 text-honey" /><p className="text-sm font-black text-cocoa/50">Revenue</p><p className="text-3xl font-black text-cocoa">{formatTk(stats.totalSales)}</p></div>
             <div className="card p-6"><Users className="mb-4 h-8 w-8 text-honey" /><p className="text-sm font-black text-cocoa/50">Customers</p><p className="text-3xl font-black text-cocoa">{stats.customers}</p></div>
           </div>
+
+          <AdminProductManager />
 
           <div className="mt-8 overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-soft">
             <div className="overflow-x-auto">

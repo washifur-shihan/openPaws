@@ -1,9 +1,11 @@
 import ProductCard from "@/components/ProductCard";
-import { products } from "@/data/products";
+import { getProducts } from "@/lib/products";
 
 export const metadata = { title: "Shop Cat Toys | OpenPaws" };
+export const dynamic = "force-dynamic";
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+  const products = await getProducts();
   const categories = Array.from(new Set(products.map((product) => product.category)));
   return (
     <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
@@ -11,7 +13,7 @@ export default function ProductsPage() {
         <p className="mb-2 text-sm font-black uppercase tracking-wide text-orange-600">Shop toys</p>
         <h1 className="text-5xl font-black text-cocoa">Cat toys for curious paws</h1>
         <p className="mt-4 text-lg leading-8 text-cocoa/70">
-          Start with a focused catalog. Replace these starter products with your real items from Supabase when you are ready.
+          Browse the current OpenPaws catalog and choose toys that fit your cat's play style.
         </p>
       </div>
       <div className="mb-8 flex gap-3 overflow-x-auto no-scrollbar">
@@ -21,6 +23,7 @@ export default function ProductsPage() {
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {products.map((product) => <ProductCard key={product.id} product={product} />)}
       </div>
+      {products.length === 0 && <p className="rounded-3xl border border-orange-100 bg-white p-8 font-bold text-cocoa/60">No products are visible yet.</p>}
     </section>
   );
 }

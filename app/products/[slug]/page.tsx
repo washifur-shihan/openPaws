@@ -4,22 +4,20 @@ import { Check, Star } from "lucide-react";
 import AddToCartButton from "@/components/AddToCartButton";
 import ProductGallery from "@/components/ProductGallery";
 import ProductCard from "@/components/ProductCard";
-import { getProductBySlug, products } from "@/data/products";
+import { getProductBySlugFromSupabase, getProducts } from "@/lib/products";
 import { formatTk } from "@/lib/utils";
 
-export function generateStaticParams() {
-  return products.map((product) => ({ slug: product.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlugFromSupabase(slug);
   return { title: product ? `${product.name} | OpenPaws` : "Product" };
 }
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const [product, products] = await Promise.all([getProductBySlugFromSupabase(slug), getProducts()]);
   if (!product) notFound();
   const related = products.filter((item) => item.id !== product.id).slice(0, 3);
 

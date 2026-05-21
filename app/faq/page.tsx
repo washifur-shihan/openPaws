@@ -1,7 +1,7 @@
 const faqs = [
   { q: "Do you deliver outside Dhaka?", a: "Yes. The checkout supports Bangladesh addresses. Update delivery fee rules in your backend when you add courier integrations." },
   { q: "Is online payment included?", a: "Not yet. This MVP is designed for cash-on-delivery style orders. You can add SSLCommerz, ShurjoPay, or bKash later." },
-  { q: "Can I change products?", a: "Yes. Edit data/products.ts for now, and run the included Supabase SQL if you want to manage products from database later." },
+  { q: "Can I change products?", a: "Yes. Admin can create, edit, hide, discount, and remove products from the dashboard after Supabase is set up." },
   { q: "How does Google Sheets automation work?", a: "When an order is placed, the API saves it to Supabase first and then appends a row to your Google Sheet using the service account." },
   { q: "How does the AI chatbot work?", a: "The floating chat widget calls the Next.js API, which forwards messages to your FastAPI service. If the FastAPI URL is missing, it returns a fallback reply." }
 ];
