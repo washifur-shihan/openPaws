@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Cat, Menu, ShoppingBag, UserRound, X } from "lucide-react";
-import { useState } from "react";
+import { Cat, LogOut, Menu, ShoppingBag, UserRound, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useCart } from "@/components/CartProvider";
+import { supabase } from "@/lib/supabaseClient";
 
 const navItems = [
   { href: "/products", label: "Shop" },
@@ -15,6 +17,25 @@ const navItems = [
 export default function Navbar() {
   const { count } = useCart();
   const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setEmail(data.session?.user.email || null));
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setEmail(session?.user.email || null);
+    });
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  async function logout() {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    setOpen(false);
+    toast.success("Logged out");
+  }
 
   return (
     <header className="sticky top-0 z-40 border-b border-orange-100 bg-cream/85 backdrop-blur-xl">
@@ -38,9 +59,20 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
-          <Link href="/auth" className="btn-secondary !px-4 !py-2.5">
-            <UserRound className="mr-2 h-4 w-4" /> Login
-          </Link>
+          {email ? (
+            <>
+              <span className="max-w-52 truncate text-sm font-bold text-cocoa/70" title={email}>
+                {email}
+              </span>
+              <button onClick={logout} className="btn-secondary !px-4 !py-2.5">
+                <LogOut className="mr-2 h-4 w-4" /> Logout
+              </button>
+            </>
+          ) : (
+            <Link href="/auth" className="btn-secondary !px-4 !py-2.5">
+              <UserRound className="mr-2 h-4 w-4" /> Login
+            </Link>
+          )}
           <Link href="/cart" className="btn-primary !px-4 !py-2.5">
             <ShoppingBag className="mr-2 h-4 w-4" /> Cart {count > 0 ? `(${count})` : ""}
           </Link>
@@ -59,8 +91,9 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
+            {email && <p className="truncate rounded-2xl bg-white px-4 py-3 text-sm font-bold text-cocoa/70">{email}</p>}
             <div className="grid grid-cols-2 gap-3">
-              <Link href="/auth" className="btn-secondary">Login</Link>
+              {email ? <button onClick={logout} className="btn-secondary">Logout</button> : <Link href="/auth" className="btn-secondary">Login</Link>}
               <Link href="/cart" className="btn-primary">Cart {count > 0 ? `(${count})` : ""}</Link>
             </div>
           </div>

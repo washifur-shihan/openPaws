@@ -29,7 +29,7 @@ export default async function HomePage() {
               Better playtime for your cat, without the boring pet shop feel.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-cocoa/70">
-              Launch-ready ecommerce website for cat toys: premium look, cart, checkout, login, admin dashboard, Google Sheet order sync, and AI chatbot.
+              Discover our curated selection of cat toys designed for fun, safety, and style.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/products" className="btn-primary text-base">
