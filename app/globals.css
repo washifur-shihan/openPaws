@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --background: #fffaf3;
+  --foreground: #21150b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(245,158,11,.18), transparent 30rem),
+    radial-gradient(circle at top right, rgba(244,63,94,.10), transparent 25rem),
+    var(--background);
+  color: var(--foreground);
+}
+
+::selection {
+  background: #fde68a;
+  color: #422006;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.input {
+  @apply w-full rounded-2xl border border-orange-100 bg-white/80 px-4 py-3 text-sm outline-none ring-honey/20 transition focus:border-honey focus:ring-4;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-2xl bg-cocoa px-5 py-3 text-sm font-bold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-black active:translate-y-0;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-2xl border border-orange-200 bg-white px-5 py-3 text-sm font-bold text-cocoa shadow-sm transition hover:-translate-y-0.5 hover:border-honey hover:shadow-soft active:translate-y-0;
+}
+
+.card {
+  @apply rounded-3xl border border-orange-100 bg-white/80 shadow-soft backdrop-blur;
+}
