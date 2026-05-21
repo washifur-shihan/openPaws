@@ -13,6 +13,10 @@ export type Product = {
   stock: number;
   badges: string[];
   features: string[];
+  basePrice?: number;
+  discountPrice?: number;
+  discountActive?: boolean;
+  isActive?: boolean;
 };
 
 export type CartItem = {

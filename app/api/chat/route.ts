@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { products } from "@/data/products";
+import { getProducts } from "@/lib/products";
 
 export const runtime = "nodejs";
 
@@ -18,17 +18,6 @@ type GeminiResponse = {
     message?: string;
   };
 };
-
-const catalogContext = products.map((product) => ({
-  name: product.name,
-  category: product.category,
-  priceBdt: product.price,
-  compareAtPriceBdt: product.compareAtPrice,
-  stock: product.stock,
-  description: product.description,
-  features: product.features,
-  productPath: `/products/${product.slug}`
-}));
 
 function buildGeminiContents(message: string, history: unknown) {
   const recentHistory = Array.isArray(history) ? history.slice(-8) as ChatMessage[] : [];
@@ -56,6 +45,16 @@ async function getGeminiReply(message: string, history: unknown) {
   if (!apiKey) return null;
 
   const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+  const catalogContext = (await getProducts()).map((product) => ({
+    name: product.name,
+    category: product.category,
+    priceBdt: product.price,
+    compareAtPriceBdt: product.compareAtPrice,
+    stock: product.stock,
+    description: product.description,
+    features: product.features,
+    productPath: `/products/${product.slug}`
+  }));
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`,
     {

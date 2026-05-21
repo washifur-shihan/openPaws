@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getProductById } from "@/data/products";
+import { getProductByIdFromSupabase } from "@/lib/products";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { appendOrderToGoogleSheet } from "@/lib/googleSheets";
 
@@ -37,15 +37,15 @@ export async function POST(request: NextRequest) {
       userId = data.user?.id ?? null;
     }
 
-    const normalizedItems = payload.items.map((item) => {
-      const product = getProductById(item.productId);
+    const normalizedItems = await Promise.all(payload.items.map(async (item) => {
+      const product = await getProductByIdFromSupabase(item.productId);
       if (!product) throw new Error(`Product not found: ${item.productId}`);
       return {
         product,
         quantity: item.quantity,
         lineTotal: product.price * item.quantity
       };
-    });
+    }));
 
     const subtotal = normalizedItems.reduce((sum, item) => sum + item.lineTotal, 0);
     const deliveryFee = Number(process.env.NEXT_PUBLIC_DELIVERY_FEE || 80);

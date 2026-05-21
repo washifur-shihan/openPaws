@@ -1,9 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, BadgeCheck, Cat, HeartHandshake, ShieldCheck, Sparkles, Truck } from "lucide-react";
-import { products } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import { formatTk } from "@/lib/utils";
+import { getProducts } from "@/lib/products";
+
+export const dynamic = "force-dynamic";
 
 const perks = [
   { icon: ShieldCheck, title: "Cat-safe picks", text: "Focused on soft, playful, indoor-friendly toys." },
@@ -11,8 +13,10 @@ const perks = [
   { icon: HeartHandshake, title: "Human support", text: "WhatsApp support and AI helper for quick questions." }
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const products = await getProducts();
   const featured = products.slice(0, 4);
+  const startingPrice = products.length ? Math.min(...products.map((product) => product.price)) : 0;
   return (
     <>
       <section className="relative overflow-hidden">
@@ -34,8 +38,8 @@ export default function HomePage() {
               <Link href="/faq" className="btn-secondary text-base">Read FAQ</Link>
             </div>
             <div className="mt-8 grid grid-cols-3 gap-4 max-w-lg">
-              <div className="card p-4"><p className="text-2xl font-black text-cocoa">6+</p><p className="text-xs font-bold text-cocoa/60">Starter products</p></div>
-              <div className="card p-4"><p className="text-2xl font-black text-cocoa">৳{Math.min(...products.map(p => p.price))}</p><p className="text-xs font-bold text-cocoa/60">Starting price</p></div>
+              <div className="card p-4"><p className="text-2xl font-black text-cocoa">{products.length}</p><p className="text-xs font-bold text-cocoa/60">Products</p></div>
+              <div className="card p-4"><p className="text-2xl font-black text-cocoa">{formatTk(startingPrice)}</p><p className="text-xs font-bold text-cocoa/60">Starting price</p></div>
               <div className="card p-4"><p className="text-2xl font-black text-cocoa">AI</p><p className="text-xs font-bold text-cocoa/60">Store helper</p></div>
             </div>
           </div>
