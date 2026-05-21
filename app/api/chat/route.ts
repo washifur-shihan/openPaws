@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getProducts } from "@/lib/products";
+import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 
 export const runtime = "nodejs";
 
@@ -99,6 +100,37 @@ async function getGeminiReply(message: string, history: unknown) {
   return reply || null;
 }
 
+async function chatCustomer(request: NextRequest) {
+  const token = request.headers.get("authorization")?.replace("Bearer ", "");
+  if (!token) return { userId: null, email: null };
+
+  const { data } = await getSupabaseAdmin().auth.getUser(token);
+  return {
+    userId: data.user?.id || null,
+    email: data.user?.email || null
+  };
+}
+
+async function saveChatLog(request: NextRequest, message: string, reply: string) {
+  try {
+    const customer = await chatCustomer(request);
+    const { error } = await getSupabaseAdmin().from("chat_logs").insert({
+      user_id: customer.userId,
+      customer_email: customer.email,
+      message,
+      reply
+    });
+    if (error) throw error;
+  } catch (error) {
+    console.error("Chat log save failed", error);
+  }
+}
+
+async function replyWithLog(request: NextRequest, message: string, reply: string) {
+  await saveChatLog(request, message, reply);
+  return NextResponse.json({ reply });
+}
+
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}));
   const message = String(body.message || "").trim();
@@ -107,7 +139,7 @@ export async function POST(request: NextRequest) {
   try {
     const geminiReply = await getGeminiReply(message, body.history);
     if (geminiReply) {
-      return NextResponse.json({ reply: geminiReply });
+      return replyWithLog(request, message, geminiReply);
     }
   } catch (error) {
     console.error("Gemini chat failed", error);
@@ -124,7 +156,7 @@ export async function POST(request: NextRequest) {
       });
       if (response.ok) {
         const data = await response.json();
-        return NextResponse.json({ reply: data.reply || data.message || "I am here to help." });
+        return replyWithLog(request, message, data.reply || data.message || "I am here to help.");
       }
     } catch {
       // Fall through to local fallback below.
@@ -140,5 +172,5 @@ export async function POST(request: NextRequest) {
   } else if (lower.includes("price") || lower.includes("cheap")) {
     reply = "The budget-friendly starter choices are Rolling Bell Ball Set and Catnip Mouse Toy. You can see exact prices on the Shop page.";
   }
-  return NextResponse.json({ reply });
+  return replyWithLog(request, message, reply);
 }
