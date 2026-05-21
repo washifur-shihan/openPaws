@@ -7,6 +7,7 @@ import { Lock, PackageCheck, RefreshCcw, TrendingUp, Users } from "lucide-react"
 import { supabase } from "@/lib/supabaseClient";
 import { formatTk } from "@/lib/utils";
 import AdminProductManager from "@/components/AdminProductManager";
+import AdminChatLogs from "@/components/AdminChatLogs";
 
 type AdminOrder = {
   id: string;
@@ -111,6 +112,7 @@ export default function AdminPage() {
           </div>
 
           <AdminProductManager />
+          <AdminChatLogs />
 
           <div className="mt-8 overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-soft">
             <div className="overflow-x-auto">

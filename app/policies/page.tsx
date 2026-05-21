@@ -7,11 +7,11 @@ export default function PoliciesPage() {
       <div className="mt-8 grid gap-4">
         <div className="card p-6">
           <h2 className="text-2xl font-black text-cocoa">Delivery</h2>
-          <p className="mt-3 leading-7 text-cocoa/65">Orders are confirmed by phone or WhatsApp before dispatch. Update this text with your final courier, timing, and delivery fee information.</p>
+          <p className="mt-3 leading-7 text-cocoa/65">Orders are confirmed by phone or WhatsApp before dispatch.</p>
         </div>
         <div className="card p-6">
           <h2 className="text-2xl font-black text-cocoa">Return</h2>
-          <p className="mt-3 leading-7 text-cocoa/65">Unopened and unused items can be returned within your chosen return window. For hygiene and pet safety, used toys should not be resold.</p>
+          <p className="mt-3 leading-7 text-cocoa/65">Items can be returned within your chosen return window. For hygiene and pet safety, used toys should not be resold.</p>
         </div>
         <div className="card p-6">
           <h2 className="text-2xl font-black text-cocoa">Support</h2>

@@ -80,6 +80,8 @@ create table if not exists public.faqs (
 create index if not exists orders_user_id_idx on public.orders(user_id);
 create index if not exists orders_created_at_idx on public.orders(created_at desc);
 create index if not exists order_items_order_id_idx on public.order_items(order_id);
+create index if not exists chat_logs_user_id_idx on public.chat_logs(user_id);
+create index if not exists chat_logs_created_at_idx on public.chat_logs(created_at desc);
 
 -- Starter products for a fresh OpenPaws catalog.
 insert into public.products (id, slug, name, tagline, description, price, discount_price, discount_active, compare_at_price, image, gallery, category, rating, stock, badges, features)
