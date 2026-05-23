@@ -36,7 +36,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <p className="text-4xl font-black text-cocoa">{formatTk(product.price)}</p>
             {product.compareAtPrice && <p className="text-lg font-bold text-cocoa/40 line-through">{formatTk(product.compareAtPrice)}</p>}
             <p className="ml-auto flex items-center gap-1 rounded-full bg-white px-4 py-2 text-sm font-black text-cocoa shadow-sm"><Star className="h-4 w-4 fill-honey text-honey" /> {product.rating}</p>
-          </div>
+          </div> 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <AddToCartButton product={product} className="text-base" />
             <Link href="/checkout" className="btn-secondary text-base">Go to checkout</Link>
