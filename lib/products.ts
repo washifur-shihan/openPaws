@@ -65,9 +65,20 @@ function numberValue(value: number | string | null | undefined, fallback = 0) {
 
 export function mapProductRow(row: ProductRow): Product {
   const basePrice = numberValue(row.price);
-  const discountPrice = row.discount_price == null ? undefined : numberValue(row.discount_price);
-  const discountActive = Boolean(row.discount_active && discountPrice != null && discountPrice < basePrice);
-  const legacyComparePrice = row.compare_at_price == null ? undefined : numberValue(row.compare_at_price);
+  const rawDiscountPrice =
+    row.discount_price == null ? undefined : numberValue(row.discount_price);
+
+  const hasValidDiscount =
+    rawDiscountPrice != null &&
+    rawDiscountPrice > 0 &&
+    rawDiscountPrice < basePrice;
+
+  const discountActive = hasValidDiscount;
+  const sellingPrice = hasValidDiscount ? rawDiscountPrice : basePrice;
+
+  const legacyComparePrice =
+    row.compare_at_price == null ? undefined : numberValue(row.compare_at_price);
+
   const image = row.image || "/placeholder-product.jpg";
 
   return {
@@ -76,8 +87,13 @@ export function mapProductRow(row: ProductRow): Product {
     name: row.name,
     tagline: row.tagline || "",
     description: row.description || "",
-    price: discountActive && discountPrice != null ? discountPrice : basePrice,
-    compareAtPrice: discountActive ? basePrice : legacyComparePrice,
+
+    // final price used for cart, checkout, product card
+    price: sellingPrice,
+
+    // crossed-out price shown only when discount exists
+    compareAtPrice: hasValidDiscount ? basePrice : legacyComparePrice,
+
     image,
     gallery: row.gallery?.length ? row.gallery : [image],
     category: row.category || "Cat Toys",
@@ -85,8 +101,10 @@ export function mapProductRow(row: ProductRow): Product {
     stock: row.stock || 0,
     badges: row.badges || [],
     features: row.features || [],
+
+    // raw database prices
     basePrice,
-    discountPrice,
+    discountPrice: hasValidDiscount ? rawDiscountPrice : undefined,
     discountActive,
     isActive: row.is_active ?? true
   };

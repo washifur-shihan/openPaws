@@ -26,10 +26,17 @@ export default function ProductCard({ product }: { product: Product }) {
         </Link>
         <p className="mt-2 min-h-12 text-sm leading-6 text-cocoa/65">{product.tagline}</p>
         <div className="mt-5 flex items-center justify-between gap-4">
-          <div>
-            <p className="text-xl font-black text-cocoa">{formatTk(product.price)}</p>
-            {product.compareAtPrice && <p className="text-xs font-semibold text-cocoa/45 line-through">{formatTk(product.compareAtPrice)}</p>}
-          </div>
+        <div>
+          <p className="text-xl font-black text-cocoa">
+            {formatTk(product.discountActive && product.discountPrice ? product.discountPrice : product.basePrice ?? product.price)}
+          </p>
+
+          {product.discountActive && product.basePrice && product.discountPrice && (
+            <p className="text-xs font-semibold text-cocoa/45 line-through">
+              {formatTk(product.basePrice)}
+            </p>
+          )}
+        </div>
           <AddToCartButton product={product} className="!px-4 !py-2.5" />
         </div>
       </div>
