@@ -58,12 +58,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
           <div className="mt-6 flex items-center gap-4">
             <p className="text-4xl font-black text-cocoa">
-              {formatTk(product.price)}
+              {formatTk(product.discountActive && product.discountPrice ? product.discountPrice : product.basePrice ?? product.price)}
             </p>
 
-            {product.compareAtPrice && (
+            {product.discountActive && product.basePrice && product.discountPrice && (
               <p className="text-lg font-bold text-cocoa/40 line-through">
-                {formatTk(product.compareAtPrice)}
+                {formatTk(product.basePrice)}
               </p>
             )}
 
