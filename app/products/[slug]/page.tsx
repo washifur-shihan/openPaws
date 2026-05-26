@@ -5,7 +5,7 @@ import AddToCartButton from "@/components/AddToCartButton";
 import ProductGallery from "@/components/ProductGallery";
 import ProductCard from "@/components/ProductCard";
 import { getProductBySlugFromSupabase, getProducts } from "@/lib/products";
-import { formatTk, getDeliveryFee } from "@/lib/utils";
+import { formatTk, getDeliveryFee, getDeliveryFeeOutside } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +26,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
   const related = products.filter((item) => item.id !== product.id).slice(0, 3);
   const deliveryFee = getDeliveryFee();
+  const deliveryFeeOutside = getDeliveryFeeOutside();
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
@@ -127,9 +128,15 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
             <div className="mt-4 space-y-3 text-sm font-semibold leading-7 text-cocoa/70">
               <p>
-                Current delivery charge:{" "}
+                Current delivery charge inside Dhaka:{" "}
                 <span className="font-black text-cocoa">
                   {formatTk(deliveryFee)}
+                </span>
+              </p>
+              <p>
+                Current delivery charge outside Dhaka:{" "}
+                <span className="font-black text-cocoa">
+                  {formatTk(deliveryFeeOutside)}
                 </span>
               </p>
               <p>

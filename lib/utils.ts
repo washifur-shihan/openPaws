@@ -14,6 +14,12 @@ export function formatTk(value: number) {
 }
 
 export function getDeliveryFee() {
-  const fee = Number(process.env.NEXT_PUBLIC_DELIVERY_FEE ?? "80");
-  return Number.isFinite(fee) ? fee : 80;
+  const fee = Number(process.env.NEXT_PUBLIC_DELIVERY_FEE ?? "70");
+  return Number.isFinite(fee) ? fee : 70;
+}
+
+
+export function getDeliveryFeeOutside() {
+  const fee = Number(process.env.NEXT_PUBLIC_DELIVERY_FEE_OUTSIDE ?? "130");
+  return Number.isFinite(fee) ? fee : 130;
 }
